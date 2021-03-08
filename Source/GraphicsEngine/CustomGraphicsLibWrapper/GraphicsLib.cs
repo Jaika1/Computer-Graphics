@@ -53,6 +53,12 @@ namespace CustomGraphicsLib
         public static extern void GLSwapBuffers();
 
         /// <summary>
+        /// Should be called at the end of every frame to allow GLFW to poll for events from the OS. (This includes key presses!)
+        /// </summary>
+        [DllImport("CustomGraphicsLib.dll")]
+        public static extern void GLPollEvents();
+
+        /// <summary>
         /// Clears the currently selected buffer with the specified colour.
         /// </summary>
         /// <param name="red">The red component represented as a float between 0.0 and 1.0.</param>
@@ -65,11 +71,12 @@ namespace CustomGraphicsLib
         /// <summary>
         /// Render a triangle to the back buffer.
         /// </summary>
-        /// <param name="p1">The position of the first vertex of the triangle.</param>
-        /// <param name="p2">The position of the second vertex of the triangle.</param>
-        /// <param name="p3">The position of the third vertex of the triangle.</param>
+        /// <param name="pos1">The position of the first vertex of the triangle.</param>
+        /// <param name="pos2">The position of the second vertex of the triangle.</param>
+        /// <param name="pos3">The position of the third vertex of the triangle.</param>
+        /// <param name="colour">The colour to use when drawing this triangle.</param>
         [DllImport("CustomGraphicsLib.dll")]
-        public static extern void GLDrawTriangle2D(Vector2 p1, Vector2 p2, Vector2 p3);
+        public static extern void GLDrawTriangle2D(Vector2 pos1, Vector2 pos2, Vector2 pos3, Vector4 colour);
 
         #endregion
 
@@ -82,6 +89,14 @@ namespace CustomGraphicsLib
         /// <param name="colour">The colour to clear the buffer with.</param>
         public static void GLClearColour(Color colour) => GLClearColour(colour.R / 255f, colour.G / 255f, colour.B / 255f, colour.A / 255f);
 
+        /// <summary>
+        /// Render a triangle to the back buffer.
+        /// </summary>
+        /// <param name="pos1">The position of the first vertex of the triangle.</param>
+        /// <param name="pos2">The position of the second vertex of the triangle.</param>
+        /// <param name="pos3">The position of the third vertex of the triangle.</param>
+        /// <param name="colour">The colour to use when drawing this triangle.</param>
+        public static void GLDrawTriangle2D(Vector2 pos1, Vector2 pos2, Vector2 pos3, Color colour) => GLDrawTriangle2D(pos1, pos2, pos3, new Vector4(colour.R / 255f, colour.G / 255f, colour.B / 255f, colour.A / 255f));
         #endregion
     }
 }

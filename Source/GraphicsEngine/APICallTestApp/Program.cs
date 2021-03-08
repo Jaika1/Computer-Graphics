@@ -14,12 +14,14 @@ namespace APICallTestApp
             {
                 while (!GLWindowShouldClose())
                 {
-                    GLClearColour(Color.Lime);
+                    GLClearColour(Color.Gray);
 
-                    GLDrawTriangle2D(new Vector2(-0.9f, -0.1f), new Vector2(-0.85f, 0.1f), new Vector2(-0.8f, -0.1f));
-                    GLDrawTriangle2D(new Vector2(0.8f, -0.1f), new Vector2(0.85f, 0.1f), new Vector2(0.9f, -0.1f));
+                    GLDrawTriangle2D(new Vector2(-0.25f, 0.0f), new Vector2(0.0f, 0.5f), new Vector2(0.25f, 0.0f), Color.Yellow);
+                    GLDrawTriangle2D(new Vector2(-0.5f, -0.5f), new Vector2(-0.25f, 0.0f), new Vector2(0.0f, -0.5f), Color.Yellow);
+                    GLDrawTriangle2D(new Vector2(0.0f, -0.5f), new Vector2(0.25f, 0.0f), new Vector2(0.5f, -0.5f), Color.Yellow);
 
                     GLSwapBuffers();
+                    GLPollEvents();
                 }
                 GLCloseWindow();
             }

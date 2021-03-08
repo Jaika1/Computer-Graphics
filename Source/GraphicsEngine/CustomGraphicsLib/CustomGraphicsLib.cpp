@@ -93,17 +93,23 @@ void GLSwapBuffers()
 		glfwSwapBuffers(windowPointer);
 }
 
+void GLPollEvents()
+{
+	glfwPollEvents();
+}
+
 void GLClearColour(float red, float green, float blue, float alpha)
 {
 	glClearColor(red, green, blue, alpha);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void GLDrawTriangle2D(glm::vec2 p1, glm::vec2 p2, glm::vec2 p3)
+void GLDrawTriangle2D(glm::vec2 pos1, glm::vec2 pos2, glm::vec2 pos3, glm::vec4 colour)
 {
 	glBegin(GL_TRIANGLES);
-	glVertex2f(p1.x, p1.y);
-	glVertex2f(p2.x, p2.y);
-	glVertex2f(p3.x, p3.y);
+	glColor4f(colour.r, colour.g, colour.b, colour.a);
+	glVertex2f(pos1.x, pos1.y);
+	glVertex2f(pos2.x, pos2.y);
+	glVertex2f(pos3.x, pos3.y);
 	glEnd();
 }

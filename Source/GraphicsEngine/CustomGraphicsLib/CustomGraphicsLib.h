@@ -53,6 +53,11 @@ extern "C" GRAPHICSLIB_IMPORT void GLCloseWindow();
 extern "C" GRAPHICSLIB_IMPORT void GLSwapBuffers();
 
 /// <summary>
+/// Should be called at the end of every frame to allow GLFW to poll for events from the OS. (This includes key presses!)
+/// </summary>
+extern "C" GRAPHICSLIB_IMPORT void GLPollEvents();
+
+/// <summary>
 /// Clears the currently selected buffer with the specified colour.
 /// </summary>
 /// <param name="red">The red component represented as a float between 0.0 and 1.0.</param>
@@ -64,7 +69,8 @@ extern "C" GRAPHICSLIB_IMPORT void GLClearColour(float red, float green, float b
 /// <summary>
 /// Render a triangle to the back buffer.
 /// </summary>
-/// <param name="p1">The position of the first vertex of the triangle.</param>
-/// <param name="p2">The position of the second vertex of the triangle.</param>
-/// <param name="p3">The position of the third vertex of the triangle.</param>
-extern "C" GRAPHICSLIB_IMPORT void GLDrawTriangle2D(glm::vec2 p1, glm::vec2 p2, glm::vec2 p3);
+/// <param name="pos1">The position of the first vertex of the triangle.</param>
+/// <param name="pos2">The position of the second vertex of the triangle.</param>
+/// <param name="pos3">The position of the third vertex of the triangle.</param>
+/// <param name="colour">The colour to use when drawing this triangle.</param>
+extern "C" GRAPHICSLIB_IMPORT void GLDrawTriangle2D(glm::vec2 pos1, glm::vec2 pos2, glm::vec2 pos3, glm::vec4 colour);
