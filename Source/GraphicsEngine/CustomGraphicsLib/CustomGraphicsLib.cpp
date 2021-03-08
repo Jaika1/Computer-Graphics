@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "CustomGraphicsLib.h"
 #include <iostream>
-#include <gl/GL.h>
+#include <gl/glew.h>
 #include <glfw3.h>
 
 constexpr char VT_ESC = 0x1B;
@@ -57,7 +57,15 @@ bool GLInitWindow(const char* title, int width, int height)
 	}
 
 	glfwMakeContextCurrent(windowPointer);
+
+	if (glewInit() != GLEW_OK)
+	{
+		GLCloseWindow();
+		return false;
+	}
+
 	glEnable(GL_DEPTH_TEST); // Enable the depth buffer
+	std::cout << glGetString(GL_VERSION) << std::endl;
 
 	return true;
 }
@@ -89,4 +97,13 @@ void GLClearColour(float red, float green, float blue, float alpha)
 {
 	glClearColor(red, green, blue, alpha);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
+void GLDrawTriangle2D(glm::vec2 p1, glm::vec2 p2, glm::vec2 p3)
+{
+	glBegin(GL_TRIANGLES);
+	glVertex2f(p1.x, p1.y);
+	glVertex2f(p2.x, p2.y);
+	glVertex2f(p3.x, p3.y);
+	glEnd();
 }

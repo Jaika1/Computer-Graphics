@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Numerics;
 using System.Runtime.InteropServices;
 
 namespace CustomGraphicsLib
@@ -60,6 +61,15 @@ namespace CustomGraphicsLib
         /// <param name="alpha">The alpha (or transparency) component represented as a float between 0.0 and 1.0.</param>
         [DllImport("CustomGraphicsLib.dll")]
         public static extern void GLClearColour(float red, float green, float blue, float alpha = 1.0f);
+
+        /// <summary>
+        /// Render a triangle to the back buffer.
+        /// </summary>
+        /// <param name="p1">The position of the first vertex of the triangle.</param>
+        /// <param name="p2">The position of the second vertex of the triangle.</param>
+        /// <param name="p3">The position of the third vertex of the triangle.</param>
+        [DllImport("CustomGraphicsLib.dll")]
+        public static extern void GLDrawTriangle2D(Vector2 p1, Vector2 p2, Vector2 p3);
 
         #endregion
 

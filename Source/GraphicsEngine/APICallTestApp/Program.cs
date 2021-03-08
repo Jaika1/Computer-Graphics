@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Numerics;
 using System.Threading;
 using static CustomGraphicsLib.GraphicsLib;
 
@@ -13,7 +14,10 @@ namespace APICallTestApp
             {
                 while (!GLWindowShouldClose())
                 {
-                    GLClearColour(Color.Green);
+                    GLClearColour(Color.Lime);
+
+                    GLDrawTriangle2D(new Vector2(-0.9f, -0.1f), new Vector2(-0.85f, 0.1f), new Vector2(-0.8f, -0.1f));
+                    GLDrawTriangle2D(new Vector2(0.8f, -0.1f), new Vector2(0.85f, 0.1f), new Vector2(0.9f, -0.1f));
 
                     GLSwapBuffers();
                 }
