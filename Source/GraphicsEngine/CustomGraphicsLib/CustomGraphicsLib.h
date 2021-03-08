@@ -74,3 +74,13 @@ extern "C" GRAPHICSLIB_IMPORT void GLClearColour(float red, float green, float b
 /// <param name="pos3">The position of the third vertex of the triangle.</param>
 /// <param name="colour">The colour to use when drawing this triangle.</param>
 extern "C" GRAPHICSLIB_IMPORT void GLDrawTriangle2D(glm::vec2 pos1, glm::vec2 pos2, glm::vec2 pos3, glm::vec4 colour);
+
+/// <summary>
+/// Render a quad to the back buffer.
+/// </summary>
+/// <param name="pos1">The position of the first vertex of the quad.</param>
+/// <param name="pos2">The position of the second vertex of the quad.</param>
+/// <param name="pos3">The position of the third vertex of the quad.</param>
+/// <param name="pos4">The position of the fourth vertex of the quad.</param>
+/// <param name="colour">The colour to use when drawing this quad.</param>
+extern "C" GRAPHICSLIB_IMPORT void GLDrawQuad2D(glm::vec2 pos1, glm::vec2 pos2, glm::vec2 pos3, glm::vec2 pos4, glm::vec4 colour);

@@ -78,6 +78,17 @@ namespace CustomGraphicsLib
         [DllImport("CustomGraphicsLib.dll")]
         public static extern void GLDrawTriangle2D(Vector2 pos1, Vector2 pos2, Vector2 pos3, Vector4 colour);
 
+        /// <summary>
+        /// Render a quad to the back buffer.
+        /// </summary>
+        /// <param name="pos1">The position of the first vertex of the quad.</param>
+        /// <param name="pos2">The position of the second vertex of the quad.</param>
+        /// <param name="pos3">The position of the third vertex of the quad.</param>
+        /// <param name="pos4">The position of the fourth vertex of the quad.</param>
+        /// <param name="colour">The colour to use when drawing this quad.</param>
+        [DllImport("CustomGraphicsLib.dll")]
+        public static extern void GLDrawQuad2D(Vector2 pos1, Vector2 pos2, Vector2 pos3, Vector2 pos4, Vector4 colour);
+
         #endregion
 
 
@@ -97,6 +108,16 @@ namespace CustomGraphicsLib
         /// <param name="pos3">The position of the third vertex of the triangle.</param>
         /// <param name="colour">The colour to use when drawing this triangle.</param>
         public static void GLDrawTriangle2D(Vector2 pos1, Vector2 pos2, Vector2 pos3, Color colour) => GLDrawTriangle2D(pos1, pos2, pos3, new Vector4(colour.R / 255f, colour.G / 255f, colour.B / 255f, colour.A / 255f));
+
+        /// <summary>
+        /// Render a quad to the back buffer.
+        /// </summary>
+        /// <param name="pos1">The position of the first vertex of the quad.</param>
+        /// <param name="pos2">The position of the second vertex of the quad.</param>
+        /// <param name="pos3">The position of the third vertex of the quad.</param>
+        /// <param name="pos4">The position of the fourth vertex of the quad.</param>
+        /// <param name="colour">The colour to use when drawing this quad.</param>
+        public static void GLDrawQuad2D(Vector2 pos1, Vector2 pos2, Vector2 pos3, Vector2 pos4, Color colour) => GLDrawQuad2D(pos1, pos2, pos3, pos4, new Vector4(colour.R / 255f, colour.G / 255f, colour.B / 255f, colour.A / 255f));
         #endregion
     }
 }
