@@ -1,5 +1,6 @@
 #pragma once
 #include <glm.hpp>
+#include <string>
 
 #pragma region Export/import definitions
 
@@ -34,28 +35,28 @@ extern "C" GRAPHICSLIB_IMPORT bool TryEnableCVTS();
 /// <param name="width">The width of the draw area for this new window in pixels.</param>
 /// <param name="height">The height of the draw area for this new window in pixels.</param>
 /// <returns>True if the operation succeeded, otherwise false.</returns>
-extern "C" GRAPHICSLIB_IMPORT bool GLInitWindow(const char* title, int width, int height);
+extern "C" GRAPHICSLIB_IMPORT bool CGLInitWindow(const char* title, int width, int height);
 
 /// <summary>
 /// Esenntially just an export for the glfwShouldWindowClose function. Returns true if the window should close, otherwise false.
 /// </summary>
 /// <returns>True if the window should close, otherwise false.</returns>
-extern "C" GRAPHICSLIB_IMPORT bool GLWindowShouldClose();
+extern "C" GRAPHICSLIB_IMPORT bool CGLWindowShouldClose();
 
 /// <summary>
 /// Closes the current window and terminates glfw.
 /// </summary>
-extern "C" GRAPHICSLIB_IMPORT void GLCloseWindow();
+extern "C" GRAPHICSLIB_IMPORT void CGLCloseWindow();
 
 /// <summary>
 /// Swaps the back and front buffers around. Since we are almost always drawing to the back buffer, this essentially displays the next frame. Call this after all drawing is done.
 /// </summary>
-extern "C" GRAPHICSLIB_IMPORT void GLSwapBuffers();
+extern "C" GRAPHICSLIB_IMPORT void CGLSwapBuffers();
 
 /// <summary>
 /// Should be called at the end of every frame to allow GLFW to poll for events from the OS. (This includes key presses!)
 /// </summary>
-extern "C" GRAPHICSLIB_IMPORT void GLPollEvents();
+extern "C" GRAPHICSLIB_IMPORT void CGLPollEvents();
 
 /// <summary>
 /// Clears the currently selected buffer with the specified colour.
@@ -64,7 +65,7 @@ extern "C" GRAPHICSLIB_IMPORT void GLPollEvents();
 /// <param name="green">The green component represented as a float between 0.0 and 1.0.</param>
 /// <param name="blue">The blue component represented as a float between 0.0 and 1.0.</param>
 /// <param name="alpha">The alpha (or transparency) component represented as a float between 0.0 and 1.0.</param>
-extern "C" GRAPHICSLIB_IMPORT void GLClearColour(float red, float green, float blue, float alpha = 1.0f);
+extern "C" GRAPHICSLIB_IMPORT void CGLClearColour(float red, float green, float blue, float alpha = 1.0f);
 
 /// <summary>
 /// Render a triangle to the back buffer.
@@ -73,7 +74,7 @@ extern "C" GRAPHICSLIB_IMPORT void GLClearColour(float red, float green, float b
 /// <param name="pos2">The position of the second vertex of the triangle.</param>
 /// <param name="pos3">The position of the third vertex of the triangle.</param>
 /// <param name="colour">The colour to use when drawing this triangle.</param>
-extern "C" GRAPHICSLIB_IMPORT void GLDrawTriangle2D(glm::vec2 pos1, glm::vec2 pos2, glm::vec2 pos3, glm::vec4 colour);
+extern "C" GRAPHICSLIB_IMPORT void CGLDrawTriangle2D(glm::vec2 pos1, glm::vec2 pos2, glm::vec2 pos3, glm::vec4 colour);
 
 /// <summary>
 /// Render a quad to the back buffer.
@@ -83,4 +84,12 @@ extern "C" GRAPHICSLIB_IMPORT void GLDrawTriangle2D(glm::vec2 pos1, glm::vec2 po
 /// <param name="pos3">The position of the third vertex of the quad. This should be the bottom-right vertice of the quad.</param>
 /// <param name="pos4">The position of the fourth vertex of the quad. This should be the bottom-left vertice of the quad.</param>
 /// <param name="colour">The colour to use when drawing this quad. For a square, this would be the top-left corner.</param>
-extern "C" GRAPHICSLIB_IMPORT void GLDrawQuad2D(glm::vec2 pos1, glm::vec2 pos2, glm::vec2 pos3, glm::vec2 pos4, glm::vec4 colour);
+extern "C" GRAPHICSLIB_IMPORT void CGLDrawQuad2D(glm::vec2 pos1, glm::vec2 pos2, glm::vec2 pos3, glm::vec2 pos4, glm::vec4 colour);
+
+/// <summary>
+/// Attempts to compile a shader of given type <paramref name="type"/> from the source code parsed through <paramref name="source"/>.
+/// </summary>
+/// <param name="type">The type of shader to compile.</param>
+/// <param name="source">The source code that will attempt to be compiled.</param>
+/// <returns>The ID of the shader that was created. Will return 0 if there was an error.</returns>
+extern "C" GRAPHICSLIB_IMPORT unsigned int CGLCompileShader(unsigned int type, const char* source);

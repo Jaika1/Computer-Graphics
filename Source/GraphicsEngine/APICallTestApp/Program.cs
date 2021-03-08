@@ -1,6 +1,8 @@
-﻿using System;
+﻿using CustomGraphicsLib.Enums;
+using System;
 using System.Drawing;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using static CustomGraphicsLib.GraphicsLib;
 
@@ -10,22 +12,24 @@ namespace APICallTestApp
     {
         static void Main(string[] args)
         {
-            if (GLInitWindow("Fancy new OpenGL window!", 1280, 720))
+            if (CGLInitWindow("Fancy new OpenGL window!", 1280, 720))
             {
-                while (!GLWindowShouldClose())
+                uint shaderId = CGLCompileShader(ShaderType.GL_VERTEX_SHADER, Properties.Resources.VertexShader);
+
+                while (!CGLWindowShouldClose())
                 {
-                    GLClearColour(Color.Gray);
+                    CGLClearColour(Color.Gray);
 
-                    GLDrawTriangle2D(new Vector2(-0.25f, 0.0f), new Vector2(0.0f, 0.5f), new Vector2(0.25f, 0.0f), Color.Yellow);
-                    GLDrawTriangle2D(new Vector2(-0.5f, -0.5f), new Vector2(-0.25f, 0.0f), new Vector2(0.0f, -0.5f), Color.Yellow);
-                    GLDrawTriangle2D(new Vector2(0.0f, -0.5f), new Vector2(0.25f, 0.0f), new Vector2(0.5f, -0.5f), Color.Yellow);
+                    CGLDrawTriangle2D(new Vector2(-0.25f, 0.0f), new Vector2(0.0f, 0.5f), new Vector2(0.25f, 0.0f), Color.Yellow);
+                    CGLDrawTriangle2D(new Vector2(-0.5f, -0.5f), new Vector2(-0.25f, 0.0f), new Vector2(0.0f, -0.5f), Color.Yellow);
+                    CGLDrawTriangle2D(new Vector2(0.0f, -0.5f), new Vector2(0.25f, 0.0f), new Vector2(0.5f, -0.5f), Color.Yellow);
 
-                    GLDrawQuad2D(new Vector2(-0.6f, 0.6f), new Vector2(0.6f, 0.6f), new Vector2(0.6f, -0.6f), new Vector2(-0.6f, -0.6f), Color.Aqua);
+                    CGLDrawQuad2D(new Vector2(-0.6f, 0.6f), new Vector2(0.6f, 0.6f), new Vector2(0.6f, -0.6f), new Vector2(-0.6f, -0.6f), Color.Aqua);
 
-                    GLSwapBuffers();
-                    GLPollEvents();
+                    CGLSwapBuffers();
+                    CGLPollEvents();
                 }
-                GLCloseWindow();
+                CGLCloseWindow();
             }
             else
             {

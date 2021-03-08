@@ -3,6 +3,7 @@
 #include <iostream>
 #include <gl/glew.h>
 #include <glfw3.h>
+#include <string>
 
 constexpr char VT_ESC = 0x1B;
 
@@ -41,7 +42,7 @@ bool TryEnableCVTS()
 	return true;
 }
 
-bool GLInitWindow(const char* title, int width, int height)
+bool CGLInitWindow(const char* title, int width, int height)
 {
 	//Initialize the GLFW library.
 	if (glfwInit() == false)
@@ -60,7 +61,7 @@ bool GLInitWindow(const char* title, int width, int height)
 
 	if (glewInit() != GLEW_OK)
 	{
-		GLCloseWindow();
+		CGLCloseWindow();
 		return false;
 	}
 
@@ -70,13 +71,13 @@ bool GLInitWindow(const char* title, int width, int height)
 	return true;
 }
 
-bool GLWindowShouldClose() {
+bool CGLWindowShouldClose() {
 	// Be safe and check to see if the window even exists!
 	if (!windowPointer) return false;
 	return glfwWindowShouldClose(windowPointer);
 }
 
-void GLCloseWindow()
+void CGLCloseWindow()
 {
 	// Be safe and check to see if the window even exists!
 	if (windowPointer)
@@ -86,25 +87,25 @@ void GLCloseWindow()
 	}
 }
 
-void GLSwapBuffers()
+void CGLSwapBuffers()
 {
 	// Be safe and check to see if the window even exists!
 	if (windowPointer)
 		glfwSwapBuffers(windowPointer);
 }
 
-void GLPollEvents()
+void CGLPollEvents()
 {
 	glfwPollEvents();
 }
 
-void GLClearColour(float red, float green, float blue, float alpha)
+void CGLClearColour(float red, float green, float blue, float alpha)
 {
 	glClearColor(red, green, blue, alpha);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void GLDrawTriangle2D(glm::vec2 pos1, glm::vec2 pos2, glm::vec2 pos3, glm::vec4 colour)
+void CGLDrawTriangle2D(glm::vec2 pos1, glm::vec2 pos2, glm::vec2 pos3, glm::vec4 colour)
 {
 	glBegin(GL_TRIANGLES);
 	glColor4f(colour.r, colour.g, colour.b, colour.a);
@@ -114,7 +115,7 @@ void GLDrawTriangle2D(glm::vec2 pos1, glm::vec2 pos2, glm::vec2 pos3, glm::vec4 
 	glEnd();
 }
 
-void GLDrawQuad2D(glm::vec2 pos1, glm::vec2 pos2, glm::vec2 pos3, glm::vec2 pos4, glm::vec4 colour)
+void CGLDrawQuad2D(glm::vec2 pos1, glm::vec2 pos2, glm::vec2 pos3, glm::vec2 pos4, glm::vec4 colour)
 {
 	glBegin(GL_QUADS);
 	glColor4f(colour.r, colour.g, colour.b, colour.a);
@@ -123,4 +124,29 @@ void GLDrawQuad2D(glm::vec2 pos1, glm::vec2 pos2, glm::vec2 pos3, glm::vec2 pos4
 	glVertex2f(pos3.x, pos3.y);
 	glVertex2f(pos4.x, pos4.y);
 	glEnd();
+}
+
+unsigned int CGLCompileShader(unsigned int type, const char* source)
+{
+	unsigned int id = glCreateShader(type); // Create a shader object and return its ID.
+	glShaderSource(id, 1, &source, nullptr); // Sets the source code to be compiled for this given shader. We are passing in only one string, so count is 1. Since this string is null-terminated, length is nullptr.
+	glCompileShader(id); // Attempts to compile our shader.
+
+	int compileStatus;
+	glGetShaderiv(id, GL_COMPILE_STATUS, &compileStatus);
+	if (compileStatus == GL_FALSE)
+	{
+		int logLength;
+		glGetShaderiv(id, GL_INFO_LOG_LENGTH, &logLength);
+		char* log = new char[logLength];
+		glGetShaderInfoLog(id, logLength, &logLength, log);
+
+		std::cout << "An error occurred while compiling a shader of type " << glGetString(type) << "!" << std::endl;
+		std::cout << log << std::endl;
+
+		delete[] log;
+		return 0;
+	}
+
+	return id;
 }
