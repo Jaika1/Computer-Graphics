@@ -78,9 +78,9 @@ extern "C" GRAPHICSLIB_IMPORT void GLDrawTriangle2D(glm::vec2 pos1, glm::vec2 po
 /// <summary>
 /// Render a quad to the back buffer.
 /// </summary>
-/// <param name="pos1">The position of the first vertex of the quad.</param>
-/// <param name="pos2">The position of the second vertex of the quad.</param>
-/// <param name="pos3">The position of the third vertex of the quad.</param>
-/// <param name="pos4">The position of the fourth vertex of the quad.</param>
-/// <param name="colour">The colour to use when drawing this quad.</param>
+/// <param name="pos1">The position of the first vertex of the quad. This should be the top-left vertice of the quad.</param>
+/// <param name="pos2">The position of the second vertex of the quad. This should be the top-right vertice of the quad.</param>
+/// <param name="pos3">The position of the third vertex of the quad. This should be the bottom-right vertice of the quad.</param>
+/// <param name="pos4">The position of the fourth vertex of the quad. This should be the bottom-left vertice of the quad.</param>
+/// <param name="colour">The colour to use when drawing this quad. For a square, this would be the top-left corner.</param>
 extern "C" GRAPHICSLIB_IMPORT void GLDrawQuad2D(glm::vec2 pos1, glm::vec2 pos2, glm::vec2 pos3, glm::vec2 pos4, glm::vec4 colour);

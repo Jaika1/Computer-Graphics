@@ -116,6 +116,11 @@ void GLDrawTriangle2D(glm::vec2 pos1, glm::vec2 pos2, glm::vec2 pos3, glm::vec4 
 
 void GLDrawQuad2D(glm::vec2 pos1, glm::vec2 pos2, glm::vec2 pos3, glm::vec2 pos4, glm::vec4 colour)
 {
-	GLDrawTriangle2D(pos3, pos1, pos2, colour);
-	GLDrawTriangle2D(pos3, pos4, pos2, colour);
+	glBegin(GL_QUADS);
+	glColor4f(colour.r, colour.g, colour.b, colour.a);
+	glVertex2f(pos1.x, pos1.y);
+	glVertex2f(pos2.x, pos2.y);
+	glVertex2f(pos3.x, pos3.y);
+	glVertex2f(pos4.x, pos4.y);
+	glEnd();
 }
