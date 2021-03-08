@@ -1,5 +1,7 @@
 ﻿using System;
-using CustomGraphicsLib;
+using System.Drawing;
+using System.Threading;
+using static CustomGraphicsLib.GraphicsLib;
 
 namespace APICallTestApp
 {
@@ -7,9 +9,21 @@ namespace APICallTestApp
     {
         static void Main(string[] args)
         {
-            bool cvtsEnabled = GraphicsLib.TryEnableCVTS();
-            GraphicsLib.PrintHello(cvtsEnabled);
-            Console.ReadKey();
+            if (GLInitWindow("Fancy new OpenGL window!", 1280, 720))
+            {
+                while (!GLWindowShouldClose())
+                {
+                    GLClearColour(Color.Green);
+
+                    GLSwapBuffers();
+                }
+                GLCloseWindow();
+            }
+            else
+            {
+                Console.WriteLine("Something went wrong!");
+                Console.ReadKey();
+            }
         }
     }
 }

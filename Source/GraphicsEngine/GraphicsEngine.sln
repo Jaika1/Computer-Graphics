@@ -5,12 +5,12 @@ VisualStudioVersion = 16.0.29728.190
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CustomGraphicsLib", "CustomGraphicsLib\CustomGraphicsLib.vcxproj", "{81A6BA3D-2660-4EFA-9E89-50EDAADDB468}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomGraphicsLibWrapper", "CustomGraphicsLibWrapper\CustomGraphicsLibWrapper.csproj", "{5CB29A95-1A2F-4448-96F3-BCA3C11DB365}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomGraphicsLibWrapper", "CustomGraphicsLibWrapper\CustomGraphicsLibWrapper.csproj", "{5CB29A95-1A2F-4448-96F3-BCA3C11DB365}"
 	ProjectSection(ProjectDependencies) = postProject
 		{81A6BA3D-2660-4EFA-9E89-50EDAADDB468} = {81A6BA3D-2660-4EFA-9E89-50EDAADDB468}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APICallTestApp", "APICallTestApp\APICallTestApp.csproj", "{78502019-FF4F-4AEB-885C-763BA7F97CFB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APICallTestApp", "APICallTestApp\APICallTestApp.csproj", "{78502019-FF4F-4AEB-885C-763BA7F97CFB}"
 	ProjectSection(ProjectDependencies) = postProject
 		{81A6BA3D-2660-4EFA-9E89-50EDAADDB468} = {81A6BA3D-2660-4EFA-9E89-50EDAADDB468}
 		{5CB29A95-1A2F-4448-96F3-BCA3C11DB365} = {5CB29A95-1A2F-4448-96F3-BCA3C11DB365}
