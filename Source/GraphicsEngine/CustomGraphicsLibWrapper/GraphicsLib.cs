@@ -98,6 +98,15 @@ namespace CustomGraphicsLib
         /// <returns>The ID of the shader that was created. Will return 0 if there was an error.</returns>
         [DllImport("CustomGraphicsLib.dll")]
         public static extern uint CGLCompileShader(ShaderType type, string source);
+
+        /// <summary>
+        /// Creates an OpenGL program on the GPU that runs the compiled code for both a vertex and fragment shader, then returns the ID of the generated program.
+        /// </summary>
+        /// <param name="vertexShaderSource">The source code for the vertex shader to be compiled.</param>
+        /// <param name="fragmentShaderSource">The source code for the fragment shader to be compiled.</param>
+        /// <returns>The ID of the program that was created on the GPU. Will return 0 if there was an error.</returns>
+        [DllImport("CustomGraphicsLib.dll")]
+        public static extern uint CGLMakeShaderProgramVF(string vertexShaderSource, string fragmentShaderSource);
         #endregion
 
 

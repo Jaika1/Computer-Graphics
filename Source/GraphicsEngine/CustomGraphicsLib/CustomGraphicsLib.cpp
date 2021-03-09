@@ -150,3 +150,15 @@ unsigned int CGLCompileShader(unsigned int type, const char* source)
 
 	return id;
 }
+
+unsigned int CGLMakeShaderProgramVF(const char* vertexShaderSource, const char* fragmentShaderSource)
+{
+	unsigned int pid = glCreateProgram();
+	unsigned int vt = CGLCompileShader(GL_VERTEX_SHADER, vertexShaderSource);
+	unsigned int fg = CGLCompileShader(GL_FRAGMENT_SHADER, fragmentShaderSource);
+
+	glAttachShader(pid, vt);
+	glAttachShader(pid, fg);
+
+
+}

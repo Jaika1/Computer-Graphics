@@ -93,3 +93,11 @@ extern "C" GRAPHICSLIB_IMPORT void CGLDrawQuad2D(glm::vec2 pos1, glm::vec2 pos2,
 /// <param name="source">The source code that will attempt to be compiled.</param>
 /// <returns>The ID of the shader that was created. Will return 0 if there was an error.</returns>
 extern "C" GRAPHICSLIB_IMPORT unsigned int CGLCompileShader(unsigned int type, const char* source);
+
+/// <summary>
+/// Creates an OpenGL program on the GPU that runs the compiled code for both a vertex and fragment shader, then returns the ID of the generated program.
+/// </summary>
+/// <param name="vertexShaderSource">The source code for the vertex shader to be compiled.</param>
+/// <param name="fragmentShaderSource">The source code for the fragment shader to be compiled.</param>
+/// <returns>The ID of the program that was created on the GPU. Will return 0 if there was an error.</returns>
+extern "C" GRAPHICSLIB_IMPORT unsigned int CGLMakeShaderProgramVF(const char* vertexShaderSource, const char* fragmentShaderSource);
