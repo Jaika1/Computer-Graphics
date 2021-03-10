@@ -107,6 +107,13 @@ namespace CustomGraphicsLib
         /// <returns>The ID of the program that was created on the GPU. Will return 0 if there was an error.</returns>
         [DllImport("CustomGraphicsLib.dll")]
         public static extern uint CGLMakeShaderProgramVF(string vertexShaderSource, string fragmentShaderSource);
+
+        [DllImport("CustomGraphicsLib.dll")]
+        public static extern void CGLAddTriangle2D(Vector2 pos1, Vector2 pos2, Vector2 pos3, Vector4 colour);
+
+        [DllImport("CustomGraphicsLib.dll")]
+        public static extern void CGLDoRender();
+
         #endregion
 
 

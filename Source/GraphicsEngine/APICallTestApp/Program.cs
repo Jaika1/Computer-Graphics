@@ -14,17 +14,17 @@ namespace APICallTestApp
         {
             if (CGLInitWindow("Fancy new OpenGL window!", 1280, 720))
             {
-                uint shaderId = CGLCompileShader(ShaderType.GL_VERTEX_SHADER, Properties.Resources.VertexShader);
+                uint shaderProgramID = CGLMakeShaderProgramVF(Properties.Resources.VertexShader, Properties.Resources.FragmentShader);
 
                 while (!CGLWindowShouldClose())
                 {
                     CGLClearColour(Color.Gray);
 
-                    CGLDrawTriangle2D(new Vector2(-0.25f, 0.0f), new Vector2(0.0f, 0.5f), new Vector2(0.25f, 0.0f), Color.Yellow);
-                    CGLDrawTriangle2D(new Vector2(-0.5f, -0.5f), new Vector2(-0.25f, 0.0f), new Vector2(0.0f, -0.5f), Color.Yellow);
-                    CGLDrawTriangle2D(new Vector2(0.0f, -0.5f), new Vector2(0.25f, 0.0f), new Vector2(0.5f, -0.5f), Color.Yellow);
+                    CGLAddTriangle2D(new Vector2(-0.25f, 0.0f), new Vector2(0.0f, 0.5f), new Vector2(0.25f, 0.0f), Vector4.One);
+                    CGLAddTriangle2D(new Vector2(-0.5f, -0.5f), new Vector2(-0.25f, 0.0f), new Vector2(0.0f, -0.5f), Vector4.One);
+                    CGLAddTriangle2D(new Vector2(0.0f, -0.5f), new Vector2(0.25f, 0.0f), new Vector2(0.5f, -0.5f), Vector4.One);
 
-                    CGLDrawQuad2D(new Vector2(-0.6f, 0.6f), new Vector2(0.6f, 0.6f), new Vector2(0.6f, -0.6f), new Vector2(-0.6f, -0.6f), Color.Aqua);
+                    //CGLDrawQuad2D(new Vector2(-0.6f, 0.6f), new Vector2(0.6f, 0.6f), new Vector2(0.6f, -0.6f), new Vector2(-0.6f, -0.6f), Color.Aqua);
 
                     CGLSwapBuffers();
                     CGLPollEvents();

@@ -4,11 +4,19 @@
 #include <gl/glew.h>
 #include <glfw3.h>
 #include <string>
+#include <gtx/transform.hpp>
 
 constexpr char VT_ESC = 0x1B;
 
 
 GLFWwindow* windowPointer = nullptr;
+
+unsigned int triangleBuffer = 0;
+unsigned int triangleArray = 0;
+glm::mat4 projMatrix(1.0f);
+
+//unsigned int vertexBufferLength = 0;
+unsigned int lastShaderProgramID = 0;
 
 
 void PrintHello(bool fancy)
@@ -66,8 +74,22 @@ bool CGLInitWindow(const char* title, int width, int height)
 	}
 
 	glEnable(GL_DEPTH_TEST); // Enable the depth buffer
-	std::cout << glGetString(GL_VERSION) << std::endl;
 
+	glGenBuffers(1, &triangleBuffer);
+	glGenVertexArrays(1, &triangleArray);
+
+	glBindVertexArray(triangleArray);
+	glBindBuffer(GL_ARRAY_BUFFER, triangleBuffer);
+
+	// Triangle buffer.
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
+
+	// Unbind the vertex buffer.
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	std::cout << glGetString(GL_VERSION) << std::endl;
 	return true;
 }
 
@@ -84,6 +106,7 @@ void CGLCloseWindow()
 	{
 		glfwDestroyWindow(windowPointer);
 		glfwTerminate();
+		if (lastShaderProgramID) glDeleteProgram(lastShaderProgramID);
 	}
 }
 
@@ -92,6 +115,7 @@ void CGLSwapBuffers()
 	// Be safe and check to see if the window even exists!
 	if (windowPointer)
 		glfwSwapBuffers(windowPointer);
+	glUniformMatrix4fv(0, 1, GL_FALSE, &projMatrix[0][0]);
 }
 
 void CGLPollEvents()
@@ -141,7 +165,7 @@ unsigned int CGLCompileShader(unsigned int type, const char* source)
 		char* log = new char[logLength];
 		glGetShaderInfoLog(id, logLength, &logLength, log);
 
-		std::cout << "An error occurred while compiling a shader of type " << glGetString(type) << "!" << std::endl;
+		std::cout << "An error occurred while compiling a shader of type " << type << "!" << std::endl;
 		std::cout << log << std::endl;
 
 		delete[] log;
@@ -160,5 +184,94 @@ unsigned int CGLMakeShaderProgramVF(const char* vertexShaderSource, const char* 
 	glAttachShader(pid, vt);
 	glAttachShader(pid, fg);
 
+	glLinkProgram(pid);
 
+	int linkCode;
+	glGetProgramiv(pid, GL_LINK_STATUS, &linkCode);
+	if (linkCode == GL_FALSE)
+	{
+		int logLength;
+		glGetProgramiv(pid, GL_INFO_LOG_LENGTH, &logLength);
+		char* log = new char[logLength];
+		glGetProgramInfoLog(pid, logLength, &logLength, log);
+
+		std::cout << "Shader program failed to link!" << std::endl;
+		std::cout << log << std::endl;
+
+		delete[] log;
+		glDeleteShader(vt);
+		glDeleteShader(fg);
+		glDeleteProgram(pid);
+
+		return 0;
+	}
+
+
+	glValidateProgram(pid);
+
+	int validationCode;
+	glGetProgramiv(pid, GL_VALIDATE_STATUS, &validationCode);
+	if (validationCode == GL_FALSE)
+	{
+		int logLength;
+		glGetProgramiv(pid, GL_INFO_LOG_LENGTH, &logLength);
+		char* log = new char[logLength];
+		glGetProgramInfoLog(pid, logLength, &logLength, log);
+
+		std::cout << "Shader program failed to validate!" << std::endl;
+		std::cout << log << std::endl;
+
+		delete[] log;
+		glDeleteShader(vt);
+		glDeleteShader(fg);
+		glDeleteProgram(pid);
+
+		return 0;
+	}
+
+
+	glDeleteShader(vt);
+	glDeleteShader(fg);
+
+	lastShaderProgramID = pid;
+	glUseProgram(lastShaderProgramID);
+
+	return pid;
+}
+
+void CGLAddTriangle2D(glm::vec2 pos1, glm::vec2 pos2, glm::vec2 pos3, glm::vec4 colour)
+{
+	float verticies[9]
+	{
+		pos1.x, pos1.y, 0.0f,
+		pos2.x, pos2.y, 0.0f,
+		pos3.x, pos3.y, 0.0f,
+	};
+	glBindVertexArray(triangleArray);
+	glBindBuffer(GL_ARRAY_BUFFER, triangleBuffer);
+
+	// Write our triangle to the buffers and draw it.
+	glBufferData(GL_ARRAY_BUFFER, 9 * sizeof(float), verticies, GL_STATIC_DRAW);
+	glDrawArrays(GL_TRIANGLES, 0, 3);
+
+	// Unbind the vertex buffer.
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+void CGLDoRender()
+{
+	//std::cout << "Prog: " << lastShaderProgramID << " | VertexCount: " << vertexBufferLength << std::endl;
+
+	//glUseProgram(lastShaderProgramID);
+	//glBindVertexArray(vertexArray);
+
+	// Draw the verticies contained in the vertex buffer.
+	//glDrawArrays(GL_TRIANGLES, 0, vertexBufferLength);
+
+	//glUseProgram(0);
+	//glBindVertexArray(0);
+
+	CGLSwapBuffers();
+	CGLPollEvents();
 }

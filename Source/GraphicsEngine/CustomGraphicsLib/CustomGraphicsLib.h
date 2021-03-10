@@ -15,6 +15,14 @@ struct GLFWwindow;
 /// <value>The pointer that will be used to store a window upon creation for our functions to call.</value>
 extern GLFWwindow* windowPointer;
 
+extern unsigned int triangleBuffer;
+extern unsigned int triangleArray;
+
+extern glm::mat4 projMatrix;
+
+//extern unsigned int vertexBufferLength;
+extern unsigned int lastShaderProgramID;
+
 
 /// <summary>
 /// A dummy command that prints "Hello World!" to the console. Used internally for testing.
@@ -101,3 +109,9 @@ extern "C" GRAPHICSLIB_IMPORT unsigned int CGLCompileShader(unsigned int type, c
 /// <param name="fragmentShaderSource">The source code for the fragment shader to be compiled.</param>
 /// <returns>The ID of the program that was created on the GPU. Will return 0 if there was an error.</returns>
 extern "C" GRAPHICSLIB_IMPORT unsigned int CGLMakeShaderProgramVF(const char* vertexShaderSource, const char* fragmentShaderSource);
+
+
+extern "C" GRAPHICSLIB_IMPORT void CGLAddTriangle2D(glm::vec2 pos1, glm::vec2 pos2, glm::vec2 pos3, glm::vec4 colour);
+
+
+extern "C" GRAPHICSLIB_IMPORT void CGLDoRender();

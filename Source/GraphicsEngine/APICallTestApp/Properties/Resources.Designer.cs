@@ -61,7 +61,30 @@ namespace APICallTestApp.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to #version 330 core
+        ///
+        ///layout(location = 0) out vec4 color;
+        ///
+        ///void main()
+        ///{
+        ///	color = vec4(0.0, 0.4, 1.0, 1.0);
+        ///}.
+        /// </summary>
+        internal static string FragmentShader {
+            get {
+                return ResourceManager.GetString("FragmentShader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to #version 330 core
+        ///
+        ///layout(location = 0) in vec4 position;
+        ///
+        ///void main()
+        ///{
+        ///	gl_Position = position;
+        ///}.
         /// </summary>
         internal static string VertexShader {
             get {

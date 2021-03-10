@@ -24,10 +24,6 @@
     </EmbeddedResource>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Resources\" />
-  </ItemGroup>
-
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="&quot;$(SolutionDir)acopy.exe&quot; &quot;$(SolutionDir)CustomGraphicsLib\bin\x64\$(Configuration)\CustomGraphicsLib.dll&quot; &quot;$(TargetDir)CustomGraphicsLib.dll&quot;" />
   </Target>
