@@ -40,6 +40,7 @@ int main()
 	unsigned int program;
 	unsigned int vertexArray;
 	glm::mat4 projection = glm::perspective(1.3f, 16.0f / 9.0f, 0.1f, 150.0f);
+	glm::mat4 viewMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -5.0f, -14.0f));
 
 	if (glfwInit() == GLFW_FALSE)
 		return -1;
@@ -133,6 +134,7 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		glUniformMatrix4fv(glGetUniformLocation(program, "ProjectionCanvas"), 1, GL_FALSE, &projection[0][0]);
+		glUniformMatrix4fv(glGetUniformLocation(program, "ViewMatrix"), 1, GL_FALSE, &viewMatrix[0][0]);
 		/*glDrawArrays(GL_TRIANGLES, 0, 3);*/
 		p.draw();
 		m.draw();
