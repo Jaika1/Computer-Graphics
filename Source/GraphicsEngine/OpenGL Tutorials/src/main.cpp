@@ -5,9 +5,14 @@
 #include <string>
 #include <glm.hpp>
 #include <gtc/matrix_transform.hpp>
+#include <gtc/type_ptr.hpp>
 #include "Grid.h"
 #include "Plane.h"
+#include "Camera.h"
 #include "OBJMesh.h"
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
 
 unsigned int CreateShader(unsigned int type, const char* source)
 {
@@ -34,13 +39,73 @@ unsigned int CreateShader(unsigned int type, const char* source)
 	return sid;
 }
 
+unsigned int GenShaderProgram(const char* vertSourceDir, const char* fragSourceDir)
+{
+	unsigned int pid;
+
+	std::ifstream vertexShaderFS(vertSourceDir);
+	std::ifstream fragmentShaderFS(fragSourceDir);
+
+	std::string vertexShaderString = std::string(std::istreambuf_iterator<char>(vertexShaderFS), std::istreambuf_iterator<char>());
+	std::string fragmentShaderString = std::string(std::istreambuf_iterator<char>(fragmentShaderFS), std::istreambuf_iterator<char>());
+
+	const char* vertexShaderSource = vertexShaderString.c_str();
+	const char* fragmentShaderSource = fragmentShaderString.c_str();
+
+	unsigned int vs = CreateShader(GL_VERTEX_SHADER, vertexShaderSource);
+	unsigned int fs = CreateShader(GL_FRAGMENT_SHADER, fragmentShaderSource);
+	
+	if (vs == 0 || fs == 0) return 0;
+
+	pid = glCreateProgram();
+	glAttachShader(pid, vs);
+	glAttachShader(pid, fs);
+	glLinkProgram(pid);
+
+	int vStat;
+	glGetProgramiv(pid, GL_LINK_STATUS, &vStat);
+	if (vStat == GL_FALSE)
+	{
+		int logLength;
+		glGetProgramiv(pid, GL_INFO_LOG_LENGTH, &logLength);
+		char* log = new char[logLength];
+		glGetProgramInfoLog(pid, logLength, &logLength, log);
+
+		std::cout << "Shader program failed to link!" << std::endl;
+		std::cout << log << std::endl;
+
+		delete[] log;
+
+		glDeleteProgram(pid);
+		glDeleteShader(vs);
+		glDeleteShader(fs);
+
+		return 0;
+	}
+
+	glValidateProgram(pid);
+
+	glDeleteShader(vs);
+	glDeleteShader(fs);
+
+	return pid;
+}
+
 int main()
 {
+	unsigned int litPid;
+	unsigned int unlitPid;
+
 	unsigned int buffer;
-	unsigned int program;
 	unsigned int vertexArray;
-	glm::mat4 projection = glm::perspective(1.3f, 16.0f / 9.0f, 0.1f, 150.0f);
-	glm::mat4 viewMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -5.0f, -14.0f));
+
+	//glm::mat4 projection = glm::perspective(1.3f, 16.0f / 9.0f, 0.1f, 150.0f);
+	//glm::mat4 viewMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -5.0f, -14.0f));
+	Camera cam(glm::vec3(-15.0f, 5.0f, 0.0f));
+	glm::mat4 modelMatrix = glm::mat4(1.0f);
+	glm::vec3 lightDir = glm::normalize(glm::vec3(1.0f, 0.0f, -1.0f));
+	float lightAngle = 0.0f;
+
 
 	if (glfwInit() == GLFW_FALSE)
 		return -1;
@@ -60,91 +125,85 @@ int main()
 		glfwTerminate();
 		return -3;
 	}
+	
+	ImGui::CreateContext();
+	//ImGuiIO& io = ImGui::GetIO(); (void)io;
+	ImGui::StyleColorsLight();
+	ImGui_ImplGlfw_InitForOpenGL(window, true);
+	ImGui_ImplOpenGL3_Init("#version 330 core");
 
 	glEnable(GL_DEPTH_TEST);
 
-	std::ifstream vertexShaderFS("./shaders/shader.vert");
-	std::ifstream fragmentShaderFS("./shaders/shader.frag");
+	litPid = GenShaderProgram("./shaders/lit.vert", "./shaders/lit.frag");
+	unlitPid = GenShaderProgram("./shaders/unlit.vert", "./shaders/unlit.frag");
 
-	std::string vertexShaderString = std::string(std::istreambuf_iterator<char>(vertexShaderFS), std::istreambuf_iterator<char>());
-	std::string fragmentShaderString = std::string(std::istreambuf_iterator<char>(fragmentShaderFS), std::istreambuf_iterator<char>());
-
-	const char* vertexShaderSource = vertexShaderString.c_str();
-	const char* fragmentShaderSource = fragmentShaderString.c_str();
-
-	unsigned int vs = CreateShader(GL_VERTEX_SHADER, vertexShaderSource);
-	unsigned int fs = CreateShader(GL_FRAGMENT_SHADER, fragmentShaderSource);
-
-#pragma region Creating a shader program and linking it, along with a validation check.
-	program = glCreateProgram();
-	glAttachShader(program, vs);
-	glAttachShader(program, fs);
-	glLinkProgram(program);
-
-	int vStat;
-	glGetProgramiv(program, GL_LINK_STATUS, &vStat);
-	if (vStat == GL_FALSE)
-	{
-		int logLength;
-		glGetProgramiv(program, GL_INFO_LOG_LENGTH, &logLength);
-		char* log = new char[logLength];
-		glGetProgramInfoLog(program, logLength, &logLength, log);
-
-		std::cout << "Shader program failed to link!" << std::endl;
-		std::cout << log << std::endl;
-
-		delete[] log;
-	}
-
-	glValidateProgram(program);
-
-	glDeleteShader(vs);
-	glDeleteShader(fs);
-	glUseProgram(program);
-#pragma endregion
-
-	Grid g(50, 50, 1.0f, glm::vec3(0.0f, -1.0f, 0.0f));
+	Grid g(50, 50, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f));
 	Plane p(2.0f, 4.0f, glm::vec3(0.0f, -1.0f, -6.0f));
 	aie::OBJMesh m;
-	m.load("mod/bunny.obj", false);
-	
-
-	/*glGenBuffers(1, &buffer);
-	glGenVertexArrays(1, &vertexArray);
-
-	glBindVertexArray(vertexArray);
-	glBindBuffer(GL_ARRAY_BUFFER, buffer);
-
-	float verts[9]
-	{
-		-0.5f, -0.5f, -10.0f,
-		 0.0f,  0.5f, -10.0f,
-		 0.5f, -0.5f, -10.0f,
-	};
-	glBufferData(GL_ARRAY_BUFFER, 9 * sizeof(float), verts, GL_STATIC_DRAW);
-
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
-
-	glBindBuffer(GL_ARRAY_BUFFER, 0);*/
+	m.load("mod/dragon.obj", false);
 
 	while (glfwWindowShouldClose(window) == GLFW_FALSE)
 	{
+		cam.UpdateCamera(window);
+
 		glClearColor(0.05f, 0.05f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		glUniformMatrix4fv(glGetUniformLocation(program, "ProjectionCanvas"), 1, GL_FALSE, &projection[0][0]);
-		glUniformMatrix4fv(glGetUniformLocation(program, "ViewMatrix"), 1, GL_FALSE, &viewMatrix[0][0]);
-		/*glDrawArrays(GL_TRIANGLES, 0, 3);*/
-		p.draw();
+#pragma region Lit Shader
+
+		glUseProgram(litPid);
+
+		glUniformMatrix4fv(glGetUniformLocation(litPid, "ProjectionCanvas"), 1, GL_FALSE, glm::value_ptr(cam.getProjectionMatrix()));
+		glUniformMatrix4fv(glGetUniformLocation(litPid, "ViewMatrix"), 1, GL_FALSE, glm::value_ptr(cam.getViewMatrix()));
+		glUniformMatrix4fv(glGetUniformLocation(litPid, "ModelMatrix"), 1, GL_FALSE, glm::value_ptr(modelMatrix));
+
+		glUniform4fv(glGetUniformLocation(litPid, "CameraPosition"), 1, glm::value_ptr(glm::vec3(glm::inverse(cam.getViewMatrix())[3])));
+		glUniform3fv(glGetUniformLocation(litPid, "BaseColour"), 1, glm::value_ptr(glm::vec3(0.0f, 0.6f, 1.0f)));
+		glUniform3fv(glGetUniformLocation(litPid, "LightDirection"), 1, glm::value_ptr(lightDir));
+
+#pragma endregion
+
 		m.draw();
+
+#pragma region Unlit Shader
+
+		glUseProgram(unlitPid);
+
+		glUniformMatrix4fv(glGetUniformLocation(unlitPid, "ProjectionCanvas"), 1, GL_FALSE, glm::value_ptr(cam.getProjectionMatrix()));
+		glUniformMatrix4fv(glGetUniformLocation(unlitPid, "ViewMatrix"), 1, GL_FALSE, glm::value_ptr(cam.getViewMatrix()));
+		glUniformMatrix4fv(glGetUniformLocation(unlitPid, "ModelMatrix"), 1, GL_FALSE, glm::value_ptr(modelMatrix));
+
+		glUniform4fv(glGetUniformLocation(unlitPid, "BaseColour"), 1, glm::value_ptr(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f)));
+
+#pragma endregion
+
 		g.draw();
-		
-		glfwSwapBuffers(window);
+
 		glfwPollEvents();
+
+#pragma region ImGui
+
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
+		ImGui::Begin("Light Editor");
+		ImGui::SliderFloat("Light Angle X", &lightDir[0], -1.0f, 1.0f);
+		ImGui::SliderFloat("Light Angle Y", &lightDir[1], -1.0f, 1.0f);
+		ImGui::SliderFloat("Light Angle Z", &lightDir[2], -1.0f, 1.0f);
+		ImGui::End();
+		ImGui::Render();
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+#pragma endregion
+
+		glfwSwapBuffers(window);
 	}
 
-	glDeleteProgram(program);
+	glDeleteProgram(litPid);
+	glDeleteProgram(unlitPid);
+	ImGui_ImplGlfw_Shutdown();
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui::DestroyContext();
 	glfwDestroyWindow(window);
 	glfwTerminate();
 

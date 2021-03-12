@@ -3,7 +3,7 @@
 #include <glm.hpp>
 #include <string>
 #include <vector>
-//#include "Texture.h"
+#include "Texture.h"
 
 namespace aie {
 
@@ -36,13 +36,13 @@ public:
 		float specularPower;
 		float opacity;
 
-		//Texture diffuseTexture;				// bound slot 0
-		//Texture alphaTexture;				// bound slot 1
-		//Texture ambientTexture;				// bound slot 2
-		//Texture specularTexture;			// bound slot 3
-		//Texture specularHighlightTexture;	// bound slot 4
-		//Texture normalTexture;				// bound slot 5
-		//Texture displacementTexture;		// bound slot 6
+		Texture diffuseTexture;				// bound slot 0
+		Texture alphaTexture;				// bound slot 1
+		Texture ambientTexture;				// bound slot 2
+		Texture specularTexture;			// bound slot 3
+		Texture specularHighlightTexture;	// bound slot 4
+		Texture normalTexture;				// bound slot 5
+		Texture displacementTexture;		// bound slot 6
 	};
 
 	OBJMesh() {}

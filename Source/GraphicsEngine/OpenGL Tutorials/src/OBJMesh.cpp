@@ -52,13 +52,13 @@ bool OBJMesh::load(const char* filename, bool loadTextures /* = true */, bool fl
 		m_materials[index].opacity = m.dissolve;
 
 		// textures
-		/*m_materials[index].alphaTexture.load((folder + m.alpha_texname).c_str());
+		m_materials[index].alphaTexture.load((folder + m.alpha_texname).c_str());
 		m_materials[index].ambientTexture.load((folder + m.ambient_texname).c_str());
 		m_materials[index].diffuseTexture.load((folder + m.diffuse_texname).c_str());
 		m_materials[index].specularTexture.load((folder + m.specular_texname).c_str());
 		m_materials[index].specularHighlightTexture.load((folder + m.specular_highlight_texname).c_str());
 		m_materials[index].normalTexture.load((folder + m.bump_texname).c_str());
-		m_materials[index].displacementTexture.load((folder + m.displacement_texname).c_str());*/
+		m_materials[index].displacementTexture.load((folder + m.displacement_texname).c_str());
 
 		++index;
 	}
@@ -210,7 +210,7 @@ void OBJMesh::draw(bool usePatches /* = false */) {
 			if (specPowUniform >= 0)
 				glUniform1f(specPowUniform, m_materials[currentMaterial].specularPower);
 
-			/*glActiveTexture(GL_TEXTURE0);
+			glActiveTexture(GL_TEXTURE0);
 			if (m_materials[currentMaterial].diffuseTexture.getHandle() > 0)
 				glBindTexture(GL_TEXTURE_2D, m_materials[currentMaterial].diffuseTexture.getHandle());
 			else if (diffuseTexUniform >= 0)
@@ -250,7 +250,7 @@ void OBJMesh::draw(bool usePatches /* = false */) {
 			if (m_materials[currentMaterial].displacementTexture.getHandle() > 0)
 				glBindTexture(GL_TEXTURE_2D, m_materials[currentMaterial].displacementTexture.getHandle());
 			else if (dispTexUniform >= 0)
-				glBindTexture(GL_TEXTURE_2D, 0);*/
+				glBindTexture(GL_TEXTURE_2D, 0);
 		}
 
 		// bind and draw geometry

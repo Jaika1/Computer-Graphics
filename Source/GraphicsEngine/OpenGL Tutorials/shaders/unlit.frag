@@ -1,8 +1,9 @@
 #version 330 core
 
+uniform vec4 BaseColour;
 out vec4 Colour;
 
 void main()
 {
-    Colour = vec4(0.0, 0.5059, 0.7412, 1.0);
+    Colour = BaseColour;
 }
