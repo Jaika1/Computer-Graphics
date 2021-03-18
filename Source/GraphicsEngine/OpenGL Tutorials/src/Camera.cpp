@@ -13,10 +13,17 @@ glm::mat4 Camera::getProjectionMatrix()
 
 glm::mat4 Camera::getViewMatrix()
 {
+	/*float thetaR = glm::radians(m_theta);
+	float phiR = glm::radians(m_phi);
+	glm::vec3 forward(cosf(phiR) * cosf(thetaR), sinf(phiR), cosf(phiR) * sinf(thetaR));*/
+	return glm::lookAt(m_position, m_position + GetForwardVector(), glm::vec3(0, 1, 0));
+}
+
+glm::vec3 Camera::GetForwardVector()
+{
 	float thetaR = glm::radians(m_theta);
 	float phiR = glm::radians(m_phi);
-	glm::vec3 forward(cosf(phiR) * cosf(thetaR), sinf(phiR), cosf(phiR) * sinf(thetaR));
-	return glm::lookAt(m_position, m_position + forward, glm::vec3(0, 1, 0));
+	return glm::vec3(cosf(phiR) * cosf(thetaR), sinf(phiR), cosf(phiR) * sinf(thetaR));
 }
 
 void Camera::UpdateCamera(GLFWwindow* window)

@@ -9,6 +9,7 @@ public:
 	Camera(glm::vec3 pos = glm::vec3(0.0f));
 	glm::mat4 getProjectionMatrix();
 	glm::mat4 getViewMatrix();
+	glm::vec3 GetForwardVector();
 	void UpdateCamera(GLFWwindow* window);
 private:
 	float m_lastMouseX;

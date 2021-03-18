@@ -13,6 +13,7 @@
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
+#include <time.h>
 
 unsigned int CreateShader(unsigned int type, const char* source)
 {
@@ -99,8 +100,9 @@ int main()
 	unsigned int buffer;
 	unsigned int vertexArray;
 
-	//glm::mat4 projection = glm::perspective(1.3f, 16.0f / 9.0f, 0.1f, 150.0f);
-	//glm::mat4 viewMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -5.0f, -14.0f));
+	clock_t lastTime = clock();
+	float deltaTime = 0.0f;
+
 	Camera cam(glm::vec3(-15.0f, 5.0f, 0.0f));
 	glm::mat4 modelMatrix = glm::mat4(1.0f);
 	glm::vec3 lightDir = glm::normalize(glm::vec3(1.0f, 0.0f, -1.0f));
@@ -140,10 +142,14 @@ int main()
 	Grid g(50, 50, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f));
 	Plane p(2.0f, 4.0f, glm::vec3(0.0f, -1.0f, -6.0f));
 	aie::OBJMesh m;
-	m.load("mod/dragon.obj", false);
-
+	m.load("mod/soulspear/soulspear.obj", true, true);
+	float warpTime = 0.0f;
 	while (glfwWindowShouldClose(window) == GLFW_FALSE)
 	{
+		clock_t currentTime = clock();
+		deltaTime = ((float)(currentTime - lastTime)) / CLOCKS_PER_SEC;
+
+		lightDir = cam.GetForwardVector();
 		cam.UpdateCamera(window);
 
 		glClearColor(0.05f, 0.05f, 0.1f, 1.0f);
@@ -158,8 +164,10 @@ int main()
 		glUniformMatrix4fv(glGetUniformLocation(litPid, "ModelMatrix"), 1, GL_FALSE, glm::value_ptr(modelMatrix));
 
 		glUniform4fv(glGetUniformLocation(litPid, "CameraPosition"), 1, glm::value_ptr(glm::vec3(glm::inverse(cam.getViewMatrix())[3])));
-		glUniform3fv(glGetUniformLocation(litPid, "BaseColour"), 1, glm::value_ptr(glm::vec3(0.0f, 0.6f, 1.0f)));
 		glUniform3fv(glGetUniformLocation(litPid, "LightDirection"), 1, glm::value_ptr(lightDir));
+
+		glUniform1i(glGetUniformLocation(litPid, "diffuseTexture"), 0);
+		glUniform1i(glGetUniformLocation(litPid, "specularTexture"), 1);
 
 #pragma endregion
 
@@ -197,6 +205,8 @@ int main()
 #pragma endregion
 
 		glfwSwapBuffers(window);
+
+		lastTime = currentTime;
 	}
 
 	glDeleteProgram(litPid);
