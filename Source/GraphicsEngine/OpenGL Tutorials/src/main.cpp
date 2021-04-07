@@ -147,7 +147,7 @@ int main()
 	unlitPid = GenShaderProgram("./shaders/unlit.vert", "./shaders/unlit.frag");
 
 	Grid g(50, 50, 1.0f, glm::vec3(0.0f, 0.0f, 0.0f));
-	Plane p(2.0f, 4.0f, glm::vec3(0.0f, -1.0f, -6.0f));
+	//Plane p(2.0f, 4.0f, glm::vec3(0.0f, -1.0f, -6.0f));
 	aie::OBJMesh m;
 	m.load("mod/soulspear/soulspear.obj", true, true);
 	float warpTime = 0.0f;

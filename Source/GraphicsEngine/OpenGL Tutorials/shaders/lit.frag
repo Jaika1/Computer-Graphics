@@ -57,7 +57,7 @@ void main()
     N = TBN * (texNormal * 2 - 1);
 
     //float lambertTerm = max(0, min(1, dot(N, -L)));
-    vec3 diffuseTotal = diffuse(L, vec3(1.0), N);
+    vec3 diffuseTotal = diffuse(L, vec3(0.5), N);
 
     vec3 V = normalize(CameraPosition - vPosition.xyz);
     //vec3 R = reflect(L, N);
@@ -80,7 +80,7 @@ void main()
     vec3 texDiffuse = texture(diffuseTexture, vTexCoord).rgb;
     vec3 texSpecular = texture(specularTexture, vTexCoord).rgb;
 
-    vec3 ambient = vec3(1.0) * Ka * texDiffuse;
+    vec3 ambient = vec3(0.5) * Ka * texDiffuse;
     vec3 diffuse = Kd * texDiffuse * diffuseTotal;
     vec3 specular = Ks * texSpecular * specularTotal;
 
