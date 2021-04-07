@@ -1,0 +1,33 @@
+{
+    "name": "HumanControls",
+    "maps": [
+        {
+            "name": "Humanoid",
+            "id": "b5fe741e-529d-4ff7-a84a-73affe926c6c",
+            "actions": [
+                {
+                    "name": "Look",
+                    "type": "Value",
+                    "id": "1cce0bd9-644f-4ce1-ab4e-1035a248dd92",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": ""
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "d481e55c-e271-4900-845e-ac16388e42bb",
+                    "path": "<Mouse>/delta",
+                    "interactions": "",
+                    "processors": "ScaleVector2(x=0.1,y=0.1)",
+                    "groups": "",
+                    "action": "Look",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
