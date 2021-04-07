@@ -1,3 +1,5 @@
+#define MAX_LIGHTS 4
+
 #include "gl46.h"
 #include <glfw3.h>
 #include <iostream>
@@ -14,6 +16,7 @@
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 #include <time.h>
+
 
 unsigned int CreateShader(unsigned int type, const char* source)
 {
@@ -105,9 +108,13 @@ int main()
 
 	Camera cam(glm::vec3(-15.0f, 5.0f, 0.0f));
 	glm::mat4 modelMatrix = glm::mat4(1.0f);
-	glm::vec3 lightDir = glm::normalize(glm::vec3(1.0f, 0.0f, -1.0f));
-	float lightAngle = 0.0f;
+	glm::vec3 forwardLightDir = glm::normalize(glm::vec3(1.0f, 0.0f, -1.0f));
+	glm::vec3 pointLights[4];
 
+	pointLights[0] = glm::vec3(0.0f, -0.2f, 0.0f);
+	pointLights[1] = glm::vec3(-1.0f, 2.0f, -1.0f);
+	pointLights[2] = glm::vec3(-1.0f, 4.4f, 1.0f);
+	pointLights[3] = glm::vec3(-1.0f, 7.3f, -1.5f);
 
 	if (glfwInit() == GLFW_FALSE)
 		return -1;
@@ -149,7 +156,7 @@ int main()
 		clock_t currentTime = clock();
 		deltaTime = ((float)(currentTime - lastTime)) / CLOCKS_PER_SEC;
 
-		lightDir = cam.GetForwardVector();
+		forwardLightDir = cam.GetForwardVector();
 		cam.UpdateCamera(window);
 
 		glClearColor(0.05f, 0.05f, 0.1f, 1.0f);
@@ -164,7 +171,11 @@ int main()
 		glUniformMatrix4fv(glGetUniformLocation(litPid, "ModelMatrix"), 1, GL_FALSE, glm::value_ptr(modelMatrix));
 
 		glUniform4fv(glGetUniformLocation(litPid, "CameraPosition"), 1, glm::value_ptr(glm::vec3(glm::inverse(cam.getViewMatrix())[3])));
-		glUniform3fv(glGetUniformLocation(litPid, "LightDirection"), 1, glm::value_ptr(lightDir));
+		glUniform3fv(glGetUniformLocation(litPid, "LightDirection"), 1, glm::value_ptr(forwardLightDir));
+
+		glUniform1i(glGetUniformLocation(litPid, "numLights"), sizeof(pointLights) / sizeof(glm::vec3));
+		glUniform3fv(glGetUniformLocation(litPid, "PointLightPosition"), sizeof(pointLights) / sizeof(glm::vec3), glm::value_ptr(pointLights[0]));
+		//glUniform3fv(glGetUniformLocation(litPid, "PointLightColour"), pointLights.size() * 3, glm::value_ptr(forwardLightDir));
 
 		glUniform1i(glGetUniformLocation(litPid, "diffuseTexture"), 0);
 		glUniform1i(glGetUniformLocation(litPid, "specularTexture"), 1);
@@ -194,11 +205,22 @@ int main()
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
-		ImGui::Begin("Light Editor");
-		ImGui::SliderFloat("Light Angle X", &lightDir[0], -1.0f, 1.0f);
-		ImGui::SliderFloat("Light Angle Y", &lightDir[1], -1.0f, 1.0f);
-		ImGui::SliderFloat("Light Angle Z", &lightDir[2], -1.0f, 1.0f);
+
+		ImGui::Begin("Directional Light Editor");
+		ImGui::SliderFloat("Light Angle X", &forwardLightDir[0], -1.0f, 1.0f);
+		ImGui::SliderFloat("Light Angle Y", &forwardLightDir[1], -1.0f, 1.0f);
+		ImGui::SliderFloat("Light Angle Z", &forwardLightDir[2], -1.0f, 1.0f);
 		ImGui::End();
+
+		for (int i = 0; i < sizeof(pointLights) / sizeof(glm::vec3); ++i)
+		{
+			ImGui::Begin((std::string("Point Light Editor (") + std::to_string(i) + std::string(")")).c_str());
+			ImGui::SliderFloat("Light Pos X", &pointLights[i].x, -20.0f, 20.0f);
+			ImGui::SliderFloat("Light Pos Y", &pointLights[i].y, -5.0f, 20.0f);
+			ImGui::SliderFloat("Light Pos Z", &pointLights[i].z, -20.0f, 20.0f);
+			ImGui::End();
+		}
+
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
