@@ -20,7 +20,7 @@ public class OrbitalCamera : MonoBehaviour
         controlScheme.Enable();
         angle = transform.eulerAngles;
         Cursor.lockState = CursorLockMode.Locked;
-        playerLayer = LayerMask.GetMask("HumanPlayer");
+        playerLayer = LayerMask.GetMask("Player");
     }
 
     // Update is called once per frame
